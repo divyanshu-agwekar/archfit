@@ -724,3 +724,24 @@ a {
     flex-direction: column;
   }
 }
+
+.loading-box {
+  text-align: center;
+  padding: 30px;
+}
+
+.spinner {
+  width: 55px;
+  height: 55px;
+  border: 6px solid #e5e7eb;
+  border-top: 6px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 18px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

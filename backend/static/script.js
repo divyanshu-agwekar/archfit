@@ -8,14 +8,26 @@ async function predictImage() {
     return;
   }
 
+  const file = fileInput.files[0];
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+  if (!allowedTypes.includes(file.type)) {
+    alert("Only JPG, JPEG, and PNG files are allowed.");
+    fileInput.value = "";
+    return;
+  }
+
   const formData = new FormData();
-  formData.append("image", fileInput.files[0]);
+  formData.append("image", file);
 
   resultDiv.style.display = "block";
   resultDiv.className = "result-card";
   resultDiv.innerHTML = `
-    <h2>Analyzing X-ray...</h2>
-    <p>Please wait while ArchFit processes the uploaded image.</p>
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <h2>Analyzing X-ray...</h2>
+      <p>Please wait while ArchFit processes the uploaded image.</p>
+    </div>
   `;
 
   button.disabled = true;
@@ -40,7 +52,7 @@ async function predictImage() {
     resultDiv.innerHTML = `
       <div class="result-layout">
         <div>
-          <img class="result-img" src="${URL.createObjectURL(fileInput.files[0])}">
+          <img class="result-img" src="${URL.createObjectURL(file)}">
         </div>
 
         <div>
@@ -83,7 +95,7 @@ async function predictImage() {
     resultDiv.style.display = "block";
     resultDiv.innerHTML = `
       <h2>Something went wrong</h2>
-      <p>Please check the Flask terminal and try again.</p>
+      <p>Please try again after a few seconds.</p>
     `;
   }
 
@@ -94,10 +106,21 @@ async function predictImage() {
 document.getElementById("imageInput").addEventListener("change", function(e) {
   const preview = document.getElementById("preview");
   const uploadText = document.getElementById("uploadText");
+  const file = e.target.files[0];
 
-  if (e.target.files.length) {
-    preview.src = URL.createObjectURL(e.target.files[0]);
-    preview.style.display = "block";
-    uploadText.style.display = "none";
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+  if (!allowedTypes.includes(file.type)) {
+    alert("Only JPG, JPEG, and PNG files are allowed.");
+    e.target.value = "";
+    preview.style.display = "none";
+    uploadText.style.display = "block";
+    return;
   }
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+  uploadText.style.display = "none";
 });
